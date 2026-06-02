@@ -161,13 +161,33 @@
     }
   
     function pass() {
-      document.getElementById("gameImage").style.transform = "scale(1)";
-      
+      const resultText = document.getElementById("resultText");
+      const img = document.getElementById("gameImage");
+
       resultText.textContent = currentCharacter.answer;
-      resultText.style.color = "ffff00";
+      resultText.style.color = "#00ff00";
       resultText.style.display = "block";
-      
-      setTimeout(loadRandomCharacter, 2500);
+
+      // reveal current image
+      img.style.transform = "scale(1)";
+
+      // preload next image BEFORE switching
+      const nextCharacter =
+        characters[Math.floor(Math.random() * characters.length)];
+
+      const preloadImg = new Image();
+      preloadImg.src = "./Images/" + nextCharacter.image;
+
+      setTimeout(() => {
+        currentCharacter = nextCharacter;
+        img.src = preloadImg.src;
+
+        img.style.transform = "scale(5)";
+        setRandomZoomPoint();
+
+        resultText.style.display = "none";
+        document.getElementById("answerBox").value = "";
+      }, 800); // short delay = smoother feel
     }
 
     // START GAME
